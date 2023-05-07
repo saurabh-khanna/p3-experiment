@@ -24,7 +24,7 @@ def fetch_data(query, _model):
 
     # clean domain
     df["domain"] = df.apply(lambda row: remove_prefix(str(row["domain"])), axis=1)
-    
+
     # merge in pageranks
     # df = df.merge(
     #     pd.read_csv(Path("data/opr_top10milliondomains.csv"))[
@@ -34,24 +34,26 @@ def fetch_data(query, _model):
     #     how="left",
     # )
     # df["open_page_rank"] = df["open_page_rank"].fillna(0)
-    df["open_page_rank"] = 1 # testing with fixed weights for now
+    df["open_page_rank"] = 1  # testing with fixed weights for now
 
     # all text for embeddings
     df["all_text"] = df["title"] + ". " + df["description"]
 
     # query_embedding = model.encode(query)
     df["result_embedding"] = df.apply(lambda row: model.encode(row["all_text"]), axis=1)
-    
-    result_vals = df['result_embedding'].values
-    weight_vals = df['open_page_rank'].values
-    df["growing_embedding"] = np.cumsum(result_vals * weight_vals) / np.cumsum(weight_vals)
+
+    result_vals = df["result_embedding"].values
+    weight_vals = df["open_page_rank"].values
+    df["growing_embedding"] = np.cumsum(result_vals * weight_vals) / np.cumsum(
+        weight_vals
+    )
     corpus_embedding = df["growing_embedding"].iloc[-1]
 
     df["representation"] = df.apply(
         lambda row: util.cos_sim(row["growing_embedding"], corpus_embedding).item(),
         axis=1,
     )
-    
+
     df = df[["url", "title", "description", "representation"]]
     # st.write(df)
     return df
@@ -73,7 +75,12 @@ def load_model():
 ## CONTENT ##
 #############
 
-st.set_page_config(page_title="S🎈nder", page_icon=":candle:", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(
+    page_title="S🎈nder",
+    page_icon=":candle:",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
 
 # hiding the hamburger menu and footer
 hide_streamlit_style = """
@@ -90,7 +97,7 @@ st.title("S🎈nder")
 st.markdown("&nbsp;")
 
 st.info(
-    '''
+    """
     We want you to use our internet search platform to search for and browse information around these **5 topics**:
 
     1.	Patriotism in my country today
@@ -100,13 +107,16 @@ st.info(
     5.	Laws around gun ownership
 
     You can search for _anything_ related to these topics, and you can click on any results you like, exactly like you would on wesites like Google or Bing. You are also free to search results as many times as you want for each topic. Please spend roughly 8 to 10 minutes browsing the search results for each topic. **You are expected to spend 30 minutes in total using this search platform. Please click the button at the bottom of this page when you are finished.**
-    ''')
+    """
+)
 st.write("&nbsp;")
 
 col_a, col_b = st.columns([1, 3])
 
 with col_a:
-    st.markdown('You can start searching for information on the above topics using the textbox on the right.')
+    st.markdown(
+        "You can start searching for information on the above topics using the textbox on the right."
+    )
     st.write("&nbsp;")
     st.write("&nbsp;")
     st.markdown("You can also change the number of search results you want to see.")
@@ -114,7 +124,7 @@ with col_a:
 with col_b:
     query = st.text_input("Type in your query and press ↩ to search.").lower().strip()
     st.write("&nbsp;")
-    n_results = st.slider('Choose how many search results you want to see', 1, 100, 10)
+    n_results = st.slider("Choose how many search results you want to see", 1, 100, 10)
 
 if query != "":
 
