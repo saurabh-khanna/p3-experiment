@@ -1,0 +1,17 @@
+credentials:
+  usernames:
+    skhanna:
+      email: saurabhkhanna@stanford.edu
+      name: Saurabh Khanna
+      password: $2b$12$8amxHGh.I7CGz/mBAbqdwursiIJt36QlMFTpzlmPxd3vagfF30SfW # To be replaced with hashed password
+    sjain:
+      email: shruti.j.90@gmail.com
+      name: Shruti Jain
+      password: $2b$12$OQUB5RcrqNaErKC.i5xM0Om2mIzzwOo7y/5s6TvoHwZ8hUZoOr29i # To be replaced with hashed password
+cookie:
+  expiry_days: 0
+  key: random_signature_key # Must be string
+  name: random_cookie_name
+preauthorized:
+  emails:
+  - khanna90@stanford.edu
