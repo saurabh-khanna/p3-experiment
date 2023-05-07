@@ -26,14 +26,15 @@ def fetch_data(query, _model):
     df["domain"] = df.apply(lambda row: remove_prefix(str(row["domain"])), axis=1)
     
     # merge in pageranks
-    df = df.merge(
-        pd.read_csv(Path("data/opr_top10milliondomains.csv"))[
-            ["domain", "open_page_rank"]
-        ],
-        on=["domain"],
-        how="left",
-    )
-    df["open_page_rank"] = df["open_page_rank"].fillna(0)
+    # df = df.merge(
+    #     pd.read_csv(Path("data/opr_top10milliondomains.csv"))[
+    #         ["domain", "open_page_rank"]
+    #     ],
+    #     on=["domain"],
+    #     how="left",
+    # )
+    # df["open_page_rank"] = df["open_page_rank"].fillna(0)
+    df["open_page_rank"] = 1 # testing with fixed weights for now
 
     # all text for embeddings
     df["all_text"] = df["title"] + ". " + df["description"]
