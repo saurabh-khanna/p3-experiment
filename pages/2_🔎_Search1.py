@@ -182,7 +182,8 @@ if query != "":
     col2.markdown("---")
 
     with col2:
-        avg = round(df_print["representation"].iloc[n_results - 1] * 100, 2) - 30
+        avg = df_print["representation"].iloc[n_results - 1]
+        avg = round((avg ** 5) * 100, 2)
         st.write("How much information related to `" + str(query) + "` am I seeing?")
         st.metric(label="", value=str(avg) + "%")
         st.write("&nbsp;")
